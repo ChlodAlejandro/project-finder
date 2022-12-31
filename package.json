@@ -29,5 +29,12 @@
         "ts-jest": "^29.0.3",
         "ts-node": "^10.9.1",
         "typescript": "^4.9.4"
+    },
+    "overrides": {
+        "eslint-plugin-import": {
+            "tsconfig-paths": {
+                "json5": "^2.2.2"
+            }
+        }
     }
 }
