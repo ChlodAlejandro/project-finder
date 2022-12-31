@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./build",
+        "allowJs": false,
+        "target": "ES2018",
+        "module": "CommonJS",
+        "esModuleInterop": true,
+        "inlineSources": true,
+        "sourceMap": true,
+        "resolveJsonModule": true
+    },
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "./node_modules/**/*"
+    ]
+}

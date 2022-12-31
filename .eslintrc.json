@@ -1,0 +1,95 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "env": {
+        "commonjs": true,
+        "es6": true,
+        "node": true
+    },
+    "plugins": [
+        "jsdoc"
+    ],
+    "extends": "plugin:@typescript-eslint/recommended",
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "ecmaFeatures": {
+            "impliedStrict": true
+        }
+    },
+    "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "import/no-unresolved": "off",
+        "jsdoc/require-returns-type": "off",
+        "jsdoc/require-param-type": "off",
+        "jsdoc/require-jsdoc": [
+            "error",
+            {
+                "contexts":
+                [
+                    "ClassDeclaration",
+                    "ClassProperty",
+                    "FunctionDeclaration",
+                    "MethodDefinition"
+                ]
+            }
+        ],
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1,
+                "FunctionDeclaration": {
+                    "parameters": "off"
+                },
+                "FunctionExpression": {
+                    "parameters": "off"
+                }
+            }
+        ],
+        "no-mixed-spaces-and-tabs": "error",
+        "space-in-parens": "error",
+        "space-before-function-paren": [
+            "error", "never"
+        ],
+        "space-infix-ops": "error",
+        "space-before-blocks": "error",
+        "spaced-comment": "error",
+        "no-irregular-whitespace": "error",
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-unused-vars": [
+            "warn"
+        ],
+        "camelcase": [
+            "warn"
+        ],
+        "max-len": [
+            "warn",
+            {
+                "code": 100,
+                "ignoreRegExpLiterals":  true
+            }
+        ],
+        "prefer-const": [
+            "error",
+            {
+                "destructuring": "all"
+            }
+        ]
+    }
+}
