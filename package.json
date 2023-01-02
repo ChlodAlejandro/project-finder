@@ -33,7 +33,7 @@
     "overrides": {
         "eslint-plugin-import": {
             "tsconfig-paths": {
-                "json5": "^2.2.2"
+                "json5": "^1.0.2"
             }
         }
     }

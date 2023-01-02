@@ -3,6 +3,7 @@ import CrawlDirectory from "./crawl/CrawlDirectory";
 import path from "path";
 import {Detector} from "./detectors/detector";
 import type {Project} from "./project";
+import {Tagger} from "./taggers/tagger";
 
 interface CrawledDirectory {
     [ key: string ]: Project | CrawledDirectory;
@@ -12,8 +13,8 @@ interface CrawledDirectory {
 
     // Load all detectors.
     const detectors: Detector[] = [];
-    const dir = await fs.opendir(path.join(__dirname, "detectors"));
-    for await (const dirent of dir) {
+    const detectorDir = await fs.opendir(path.join(__dirname, "detectors"));
+    for await (const dirent of detectorDir) {
         if (!dirent.isFile() || dirent.name.endsWith(".d.ts")) {
             continue;
         }
@@ -37,6 +38,23 @@ interface CrawledDirectory {
         (a, b) =>
             (b.priority ?? 0) - (a.priority ?? 0) || a.name.localeCompare(b.name)
     );
+
+    // Load all taggers.
+    const taggers: Tagger[] = [];
+    const taggerDir = await fs.opendir(path.join(__dirname, "taggers"));
+    for await (const dirent of taggerDir) {
+        if (!dirent.isFile() || dirent.name.endsWith(".d.ts")) {
+            continue;
+        }
+        const tagger = (await import(path.join(__dirname, "taggers", dirent.name))).default;
+
+        if (tagger.tag && tagger.onProject) {
+            taggers.push(tagger);
+            console.log(`Loaded tagger: ${tagger.tag}`);
+        } else {
+            console.error(`Invalid tagger: ${tagger.tag} (${dirent.name})`);
+        }
+    }
 
 
     /**
@@ -79,15 +97,44 @@ interface CrawledDirectory {
                     });
                     highestDetectPriority = detector.detectPriority;
 
-                    if (detector.last)
-                        break;
                     if (!detector.crawlSubdirectories)
                         continueCrawl = false;
+                    if (detector.last)
+                        break;
                 } else if (result === false) {
                     detectorResult = false;
                     continueCrawl = false;
                     highestDetectPriority = detector.detectPriority;
                 }
+            }
+
+            if (detectorResult) {
+                const projectTags = new Set(detectorResult.tags ?? []);
+                taggerLoop: for (const tagger of taggers) {
+                    if (Array.isArray(tagger.skipFor)) {
+                        for (const skip of tagger.skipFor) {
+                            if (typeof skip === "string") {
+                                if (detectorResult.detector === skip) {
+                                    continue taggerLoop;
+                                }
+                            } else if (skip.test(detectorResult.detector)) {
+                                continue taggerLoop;
+                            }
+                        }
+                    } else if (typeof tagger.skipFor === "string") {
+                        if (detectorResult.detector === tagger.skipFor) {
+                            continue;
+                        }
+                    } else if (tagger.skipFor?.test(detectorResult.detector)) {
+                        continue;
+                    }
+
+                    if (await tagger.onProject(crawlDir, detectorResult)) {
+                        projectTags.add(tagger.tag);
+                    }
+                }
+
+                detectorResult.tags = Array.from(projectTags);
             }
 
             // Check if we are still going to crawl.
@@ -116,7 +163,7 @@ interface CrawledDirectory {
 
     console.log(
         JSON.stringify(
-            await crawl(path.resolve(process.cwd())),
+            await crawl(path.resolve(process.cwd(), process.argv[2] ?? ".")),
             null,
             4
         )
