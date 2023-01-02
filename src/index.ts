@@ -111,7 +111,10 @@ interface CrawledDirectory {
             if (detectorResult) {
                 const projectTags = new Set(detectorResult.tags ?? []);
                 taggerLoop: for (const tagger of taggers) {
-                    if (Array.isArray(tagger.skipFor)) {
+                    if (projectTags.has(tagger.tag)) {
+                        // Skip if already tagged.
+                        continue;
+                    } else if (Array.isArray(tagger.skipFor)) {
                         for (const skip of tagger.skipFor) {
                             if (typeof skip === "string") {
                                 if (detectorResult.detector === skip) {

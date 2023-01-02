@@ -59,6 +59,33 @@ export default <Detector>{
                 }
 
                 if (
+                    hasPackage("babel") ||
+                    nodePackageData.babel != null ||
+                    await Promise.race([
+                        "babel.config.json",
+                        "babel.config.js",
+                        "babel.config.cjs",
+                        "babel.config.mjs",
+
+                        ".babelrc.json",
+                        ".babelrc.js",
+                        ".babelrc.cjs",
+                        ".babelrc.mjs",
+
+                        ".babelrc"
+                    ].map(v => dirInfo.getFile(v)))
+                ) {
+                    tags.push("babel");
+                }
+
+                if (
+                    hasPackage("rollup") ||
+                    await dirInfo.getFile("rollup.config.js")
+                ) {
+                    tags.push("rollup");
+                }
+
+                if (
                     hasPackage("webpack") ||
                     hasPackage("webpack-cli") ||
                     hasPackage("webpack-dev-server") ||
@@ -78,21 +105,33 @@ export default <Detector>{
                 if (
                     hasPackage("eslint") ||
                     nodePackageData["eslintConfig"] != null ||
-                    await dirInfo.getFile(".eslintrc.js") ||
-                    await dirInfo.getFile(".eslintrc.cjs") ||
-                    await dirInfo.getFile(".eslintrc.yaml") ||
-                    await dirInfo.getFile(".eslintrc.yml") ||
-                    await dirInfo.getFile(".eslintrc.json")
+                    await Promise.race([
+                        ".eslintrc.js",
+                        ".eslintrc.cjs",
+                        ".eslintrc.yaml",
+                        ".eslintrc.yml",
+                        ".eslintrc.json"
+                    ].map(v => dirInfo.getFile(v)))
                 ) {
                     tags.push("eslint");
                 }
 
                 // FRAMEWORKS
 
-                if (await dirInfo.getFile("next.config.js")) {
+                if (
+                    await Promise.race([
+                        dirInfo.getFile("next.config.js"),
+                        dirInfo.getDirectory(".next")
+                    ])
+                ) {
                     tags.push("next.js");
                 }
-                if (await dirInfo.getFile("nuxt.config.js")) {
+                if (
+                    await Promise.race([
+                        dirInfo.getFile("nuxt.config.js"),
+                        dirInfo.getDirectory(".nuxt")
+                    ])
+                ) {
                     tags.push("nuxt.js");
                 }
                 if (hasPackage("react")) {
