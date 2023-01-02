@@ -40,7 +40,8 @@ interface Detector {
      *
      * @param dirInfo The directory being crawled.
      */
-    onDir: (dirInfo: CrawlDirectory) => DetectorResult | Promise<DetectorResult>;
+    onDir: (dirInfo: CrawlDirectory, parentProject?: Project) =>
+        DetectorResult | Promise<DetectorResult>;
 
 }
 

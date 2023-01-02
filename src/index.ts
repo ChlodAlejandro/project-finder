@@ -62,7 +62,7 @@ interface CrawledDirectory {
      *
      * The callback is not run on the directory passed as the path.
      */
-    async function crawl(crawlPath: string): Promise<CrawledDirectory> {
+    async function crawl(crawlPath: string, mainProject?: Project): Promise<CrawledDirectory> {
         const dir = await fs.opendir(crawlPath);
 
         const projects: CrawledDirectory = {};
@@ -86,7 +86,7 @@ interface CrawledDirectory {
 
                 let result;
                 try {
-                    result = await detector.onDir(crawlDir);
+                    result = await detector.onDir(crawlDir, mainProject);
                 } catch (e) {
                     console.error(`Error in detector ${detector.name}: ${e}`);
                     continue;
@@ -134,13 +134,16 @@ interface CrawledDirectory {
                     }
                 }
 
-                detectorResult.tags = Array.from(projectTags);
+                detectorResult.tags = Array.from(projectTags).sort();
             }
 
             // Check if we are still going to crawl.
             if (continueCrawl) {
                 // Crawl!
-                const subprojects = await crawl(path.join(crawlPath, dirent.name));
+                const subprojects = await crawl(
+                    path.join(crawlPath, dirent.name),
+                    detectorResult || undefined
+                );
 
                 // subprojects.length > 0
                 const hasSubprojects = Object.entries(subprojects)[0] != null;

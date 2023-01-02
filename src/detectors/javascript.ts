@@ -32,18 +32,43 @@ export default <Detector>{
                 nodePackage || npmPackageLock || npmShrinkwrap
             )?.read().then(d => d.json());
 
+            /**
+             * Check if the package data has a package.
+             */
+            function hasPackage(name: string) {
+                return nodePackageData.dependencies?.[name] ||
+                    nodePackageData.devDependencies?.[name] ||
+                    nodePackageData.packages?.[name];
+            }
+
             try {
-                if (
-                    nodePackage || npmPackageLock || npmShrinkwrap
-                ) {
+                // DEVELOPMENT TOOLS
+                if (nodePackage || npmPackageLock || npmShrinkwrap) {
                     tags.push("npm");
                 }
 
-                if (await dirInfo.getFile("tsconfig.json")) {
+                if (yarnPackageLock) {
+                    tags.push("yarn");
+                }
+
+                if (
+                    hasPackage("typescript") ||
+                    await dirInfo.getFile("tsconfig.json")
+                ) {
                     tags.push("typescript");
                 }
 
                 if (
+                    hasPackage("webpack") ||
+                    hasPackage("webpack-cli") ||
+                    hasPackage("webpack-dev-server") ||
+                    await dirInfo.getFile("webpack.config.js")
+                ) {
+                    tags.push("webpack");
+                }
+
+                if (
+                    hasPackage("jshint") ||
                     nodePackageData["jshintConfig "] != null ||
                     await dirInfo.getFile(".jshintrc")
                 ) {
@@ -51,6 +76,7 @@ export default <Detector>{
                 }
 
                 if (
+                    hasPackage("eslint") ||
                     nodePackageData["eslintConfig"] != null ||
                     await dirInfo.getFile(".eslintrc.js") ||
                     await dirInfo.getFile(".eslintrc.cjs") ||
@@ -59,6 +85,21 @@ export default <Detector>{
                     await dirInfo.getFile(".eslintrc.json")
                 ) {
                     tags.push("eslint");
+                }
+
+                // FRAMEWORKS
+
+                if (await dirInfo.getFile("next.config.js")) {
+                    tags.push("next.js");
+                }
+                if (await dirInfo.getFile("nuxt.config.js")) {
+                    tags.push("nuxt.js");
+                }
+                if (hasPackage("react")) {
+                    tags.push("react");
+                }
+                if (hasPackage("vue")) {
+                    tags.push("vue.js");
                 }
             } catch (e) {
                 // Silent failure.
