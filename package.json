@@ -20,7 +20,7 @@
     "homepage": "https://github.com/ChlodAlejandro/project-finder#readme",
     "devDependencies": {
         "@types/node": "^18.11.4",
-        "@typescript-eslint/eslint-plugin": "^5.42.0",
+        "@typescript-eslint/eslint-plugin": "^5.48.0",
         "@typescript-eslint/parser": "^5.46.0",
         "eslint": "^8.30.0",
         "eslint-plugin-import": "^2.26.0",
