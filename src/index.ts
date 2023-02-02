@@ -29,7 +29,7 @@ interface CrawledDirectory {
             });
 
             detectors.push(detector);
-            console.log(`Loaded detector: ${detector.name}`);
+            // console.log(`Loaded detector: ${detector.name}`);
         } else {
             console.error(`Invalid detector: ${detector.name} (${dirent.name})`);
         }
@@ -50,7 +50,7 @@ interface CrawledDirectory {
 
         if (tagger.tag && tagger.onProject) {
             taggers.push(tagger);
-            console.log(`Loaded tagger: ${tagger.tag}`);
+            // console.log(`Loaded tagger: ${tagger.tag}`);
         } else {
             console.error(`Invalid tagger: ${tagger.tag} (${dirent.name})`);
         }
@@ -73,7 +73,7 @@ interface CrawledDirectory {
             }
 
             const crawlDir = new CrawlDirectory(crawlPath, dirent.name);
-            console.log("crawling... ", crawlDir.absolutePath);
+            // console.log("crawling... ", crawlDir.absolutePath);
 
             // Check if this directory is a project.
             let detectorResult: Project | false;
