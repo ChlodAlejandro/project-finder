@@ -15,7 +15,7 @@ interface CrawledDirectory {
     const detectors: Detector[] = [];
     const detectorDir = await fs.opendir(path.join(__dirname, "detectors"));
     for await (const dirent of detectorDir) {
-        if (!dirent.isFile() || dirent.name.endsWith(".d.ts")) {
+        if (!dirent.isFile() || dirent.name.endsWith(".d.ts") || dirent.name.endsWith(".map")) {
             continue;
         }
         const detector = (await import(path.join(__dirname, "detectors", dirent.name))).default;
@@ -43,7 +43,7 @@ interface CrawledDirectory {
     const taggers: Tagger[] = [];
     const taggerDir = await fs.opendir(path.join(__dirname, "taggers"));
     for await (const dirent of taggerDir) {
-        if (!dirent.isFile() || dirent.name.endsWith(".d.ts")) {
+        if (!dirent.isFile() || dirent.name.endsWith(".d.ts") || dirent.name.endsWith(".map")) {
             continue;
         }
         const tagger = (await import(path.join(__dirname, "taggers", dirent.name))).default;
