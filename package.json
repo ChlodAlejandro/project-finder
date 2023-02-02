@@ -1,6 +1,6 @@
 {
     "name": "@chlodalejandro/project-finder",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "pspspsps for pet projects",
     "main": "build/index.js",
     "bin": {
