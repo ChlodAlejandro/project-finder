@@ -1,5 +1,5 @@
 {
-    "name": "project-finder",
+    "name": "@chlodalejandro/project-finder",
     "version": "1.0.0",
     "description": "pspspsps for pet projects",
     "main": "src/index.ts",
