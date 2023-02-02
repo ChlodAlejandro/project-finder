@@ -2,11 +2,20 @@
     "name": "@chlodalejandro/project-finder",
     "version": "1.0.0",
     "description": "pspspsps for pet projects",
-    "main": "src/index.ts",
+    "main": "build/index.js",
     "bin": {
         "project-finder": "./build/index.js"
     },
-    "scripts": {},
+    "types": "build/types",
+    "files": [
+        "build",
+        "LICENSE",
+        "README"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "prepack": "npm run build"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/ChlodAlejandro/project-finder.git"
