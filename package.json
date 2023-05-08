@@ -28,7 +28,7 @@
     },
     "homepage": "https://github.com/ChlodAlejandro/project-finder#readme",
     "devDependencies": {
-        "@types/node": "^18.11.4",
+        "@types/node": "^20.1.0",
         "@typescript-eslint/eslint-plugin": "^5.48.1",
         "@typescript-eslint/parser": "^5.49.0",
         "eslint": "^8.30.0",
